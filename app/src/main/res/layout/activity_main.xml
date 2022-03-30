@@ -86,18 +86,15 @@
         app:noOfFields="4" />
 
 
-    <com.sung.pinedittext.SquarePinField
-        android:id="@+id/squareField4"
+    <com.sung.pinedittext.CustomPinEditText
+        android:id="@+id/customEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:hint="hint"
+        android:background="@null"
         android:inputType="number"
         android:textSelectHandle="@drawable/text_handle"
         android:textSize="16sp"
-        app:distanceInBetween="10dp"
         app:fieldColor="@color/colorPrimary"
-        app:highlightColor="@color/colorAccent"
-        app:highlightType="currentField"
-        app:noOfFields="6" />
+        app:highlightColor="@color/colorAccent" />
 </LinearLayout>

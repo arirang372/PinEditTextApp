@@ -2,6 +2,7 @@ package com.sung.pinedittext
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -104,7 +105,7 @@ open class PinField : AppCompatEditText {
 
     var onTextCompleteListener: OnTextCompleteListener? = null
 
-    var fieldBgColor = ContextCompat.getColor(context, R.color.pinFieldLibraryAccent)
+    var fieldBgColor : Int = ContextCompat.getColor(context, R.color.pinFieldLibraryAccent)
         set(value) {
             field = value
             fieldBgPaint.color = fieldBgColor

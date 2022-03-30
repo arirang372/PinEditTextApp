@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/johns/Documents/AndroidStudioProjects/PinEditTextApp/app/src/main/res/drawable/text_handle.xml" value="0.197" />
+        <entry key="..\:/Users/johns/Documents/AndroidStudioProjects/PinEditTextApp/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/johns/Documents/Kotlin/AndroidStudioProjects/PinEditTextApp/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/johns/Documents/Kotlin/AndroidStudioProjects/PinEditTextApp/pinedittext/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
       </map>
