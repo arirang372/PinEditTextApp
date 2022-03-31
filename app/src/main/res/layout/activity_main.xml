@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
+    android:background="@color/screen_background"
     android:orientation="vertical">
 
     <TextView
@@ -28,63 +29,47 @@
         app:highlightType="allFields"
         app:noOfFields="4" />
 
-    <com.sung.pinedittext.SquarePinField
-        android:id="@+id/lineField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Type your pin here"
-        android:inputType="number"
-        android:textSelectHandle="@drawable/text_handle"
-        android:textSize="16sp"
-        app:fieldColor="@color/colorAccent"
-        app:highlightEnabled="false"
-        app:highlightSingleFieldMode="true"
-        app:highlightType="completedFields"
-        app:isCursorEnabled="true" />
+<!--    <com.sung.pinedittext.SquarePinField-->
+<!--        android:id="@+id/lineField"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:hint="Type your pin here"-->
+<!--        android:inputType="number"-->
+<!--        android:textSelectHandle="@drawable/text_handle"-->
+<!--        android:textSize="16sp"-->
+<!--        app:fieldColor="@color/colorAccent"-->
+<!--        app:highlightEnabled="false"-->
+<!--        app:highlightSingleFieldMode="true"-->
+<!--        app:highlightType="completedFields"-->
+<!--        app:isCursorEnabled="true" />-->
 
-    <com.sung.pinedittext.SquarePinField
-        android:id="@+id/circleField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:inputType="number"
-        android:textSelectHandle="@drawable/text_handle"
-        android:textSize="16sp"
-        app:circleRadius="15dp"
-        app:fieldBgColor="#ddd"
-        app:fillerRadius="10dp"
-        app:noOfFields="3" />
+<!--    <com.sung.pinedittext.SquarePinField-->
+<!--        android:id="@+id/circleField"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:inputType="number"-->
+<!--        android:textSelectHandle="@drawable/text_handle"-->
+<!--        android:textSize="16sp"-->
+<!--        app:circleRadius="15dp"-->
+<!--        app:fieldBgColor="#ddd"-->
+<!--        app:fillerRadius="10dp"-->
+<!--        app:noOfFields="3" />-->
 
-    <com.sung.pinedittext.SquarePinField
-        android:id="@+id/circleField1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:inputType="number"
-        android:text="111"
-        android:textSelectHandle="@drawable/text_handle"
-        android:textSize="16sp"
-        app:circleRadius="15dp"
-        app:fieldColor="@color/colorAccent"
-        app:fillerRadius="10dp"
-        app:noOfFields="3" />
-
-    <com.sung.pinedittext.SquarePinField
-        android:id="@+id/squareField1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:inputType="number"
-        android:textSelectHandle="@drawable/text_handle"
-        android:textSize="16sp"
-        app:distanceInBetween="16dp"
-        app:fieldColor="@color/colorPrimary"
-        app:highlightColor="@color/colorAccent"
-        app:highlightType="currentField"
-        app:isCursorEnabled="true"
-        app:noOfFields="4" />
-
+<!--    <com.sung.pinedittext.SquarePinField-->
+<!--        android:id="@+id/circleField1"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:inputType="number"-->
+<!--        android:text="111"-->
+<!--        android:textSelectHandle="@drawable/text_handle"-->
+<!--        android:textSize="16sp"-->
+<!--        app:circleRadius="15dp"-->
+<!--        app:fieldColor="@color/colorAccent"-->
+<!--        app:fillerRadius="10dp"-->
+<!--        app:noOfFields="3" />-->
 
     <com.sung.pinedittext.CustomPinEditText
         android:id="@+id/customEditText"
@@ -93,8 +78,14 @@
         android:layout_marginTop="15dp"
         android:background="@null"
         android:inputType="number"
-        android:textSelectHandle="@drawable/text_handle"
         android:textSize="16sp"
-        app:fieldColor="@color/colorPrimary"
-        app:highlightColor="@color/colorAccent" />
+        app:fieldColor="@color/colorPrimary" />
+
+
+    <com.sung.pinedittext.CustomRectangle
+        android:id="@+id/customRectangle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@null" />
 </LinearLayout>

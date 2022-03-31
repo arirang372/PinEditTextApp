@@ -26,6 +26,7 @@ open class PinField : AppCompatEditText {
 
     companion object {
         const val DEFAULT_DISTANCE_IN_BETWEEN = -1f
+        const val MULTIPLIER = 2
     }
 
     protected var distanceInBetween: Float = DEFAULT_DISTANCE_IN_BETWEEN
@@ -190,7 +191,8 @@ open class PinField : AppCompatEditText {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = getViewWidth(defaultWidth * numberOfFields, widthMeasureSpec)
         singleFieldWidth = width / numberOfFields
-        setMeasuredDimension(width, getViewHeight(singleFieldWidth, heightMeasureSpec))
+        var height = getViewHeight(singleFieldWidth, heightMeasureSpec)
+        setMeasuredDimension(width,height * MULTIPLIER)
     }
 
     protected open fun getViewWidth(desiredWidth: Int, widthMeasureSpec: Int): Int {
@@ -237,6 +239,7 @@ open class PinField : AppCompatEditText {
     }
 
     override fun onSelectionChanged(selStart: Int, selEnd: Int) {
+        super.onSelectionChanged(selStart, selEnd)
         this.setSelection(this.text!!.length)
     }
 

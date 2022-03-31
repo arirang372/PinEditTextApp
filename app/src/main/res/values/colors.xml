@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="screen_background">#FAFAFA</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -10,6 +11,6 @@
     <color name="pinFieldLibraryAccent">#FF4081</color>
     <color name="inactivePinFieldColor">#808080</color>
     <color name="pinFieldLibraryTransparent">#00000000</color>
-    <color name="colorPrimary">#FF6200EE</color>
+    <color name="colorPrimary">#CDCDCD</color>
     <color name="colorAccent">#FF3700B3</color>
 </resources>
