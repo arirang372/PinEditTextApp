@@ -117,9 +117,9 @@ class CustomPinEditText : AppCompatEditText {
     private fun initialize(attr: AttributeSet) {
         val attributes = context.theme.obtainStyledAttributes(attr, R.styleable.PinField, 0, 0)
         try {
-            fieldColor = attributes.getColor(R.styleable.PinField_fieldColor, fieldColor)
             cursorPaintColor =
                 attributes.getColor(R.styleable.PinField_highlightColor, cursorPaintColor)
+            fieldColor = attributes.getColor(R.styleable.PinField_fieldColor, fieldColor)
             textPaint.typeface = typeface
         } finally {
             attributes.recycle()
