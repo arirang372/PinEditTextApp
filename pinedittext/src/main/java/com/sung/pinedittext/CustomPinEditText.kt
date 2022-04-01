@@ -15,8 +15,6 @@ import kotlin.math.min
  *   @author John Sung
  */
 class CustomPinEditText : AppCompatEditText {
-    private var cursorLineThickness = Util.dpToPx(1.0f)
-    private val cursorPadding = Util.dpToPx(10f)
     private var cursorPaint = Paint()
     private var cursorPaintColor = ContextCompat.getColor(context, R.color.cursorColor)
         set(value) {
@@ -24,11 +22,6 @@ class CustomPinEditText : AppCompatEditText {
             cursorPaint.color = field
             invalidate()
         }
-    private var cursorThickness = cursorLineThickness
-        get() {
-            return cursorLineThickness + cursorLineThickness * 0.7f
-        }
-    private val defaultWidth = Util.dpToPx(55f).toInt()
     private var fieldColor = ContextCompat.getColor(context, R.color.inactivePinFieldColor)
         set(value) {
             field = value
@@ -39,7 +32,7 @@ class CustomPinEditText : AppCompatEditText {
         color = fieldColor
         isAntiAlias = true
         style = Paint.Style.STROKE
-        strokeWidth = cursorLineThickness
+        strokeWidth = CURSOR_LINE_THICKNESS
     }
     private var isCursorVisibleNow = true
     private var lastCursorChangeState: Long = -1
@@ -106,7 +99,7 @@ class CustomPinEditText : AppCompatEditText {
     init {
         cursorPaint = Paint(fieldPaint).apply {
             color = cursorPaintColor
-            strokeWidth = cursorThickness
+            strokeWidth = CURSOR_THICKNESS
         }
         isSingleLine = true
         limitCharacter()
@@ -141,14 +134,15 @@ class CustomPinEditText : AppCompatEditText {
             val top = (height / 2) - (squareHeight / 2)
             val bottom = (height / 2) + (squareHeight / 2)
             val textX = ((right - left) / 2) + left
-            val textY = ((bottom - top) / 2 + top) + cursorLineThickness + (textPaint.textSize / 4)
+            val textY =
+                ((bottom - top) / 2 + top) + CURSOR_LINE_THICKNESS + (textPaint.textSize / 4)
             canvas?.drawRect(left, top, right, bottom, fieldPaint)
             val character: Char? = getCharacterAt(i)
             character?.let {
                 canvas?.drawText(it.toString(), textX, textY, textPaint)
             }
             if (hasFocus() && i == text?.length ?: 0) {
-                val cursorPadding = cursorPadding + cursorThickness
+                val cursorPadding = CURSOR_PADDING + CURSOR_THICKNESS
                 val cursorY1 = (top + cursorPadding) * 1.3f
                 val cursorY2 = (bottom - cursorPadding) * 0.8f
                 drawCursor(canvas, textX, cursorY1, cursorY2, cursorPaint)
@@ -157,7 +151,7 @@ class CustomPinEditText : AppCompatEditText {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = getViewWidth(defaultWidth * NUMBER_OF_FIELDS, widthMeasureSpec)
+        val width = getViewWidth(DEFAULT_WIDTH * NUMBER_OF_FIELDS, widthMeasureSpec)
         singleFieldWidth = width / NUMBER_OF_FIELDS
         val height = getViewHeight(singleFieldWidth, heightMeasureSpec) * MULTIPLIER
         setMeasuredDimension(width, height.toInt())
@@ -176,6 +170,10 @@ class CustomPinEditText : AppCompatEditText {
     }
 
     companion object {
+        private var CURSOR_LINE_THICKNESS = Util.dpToPx(1.0f)
+        private val CURSOR_PADDING = Util.dpToPx(10f)
+        private var CURSOR_THICKNESS = CURSOR_LINE_THICKNESS + CURSOR_LINE_THICKNESS * 0.7f
+        private val DEFAULT_WIDTH = Util.dpToPx(55f).toInt()
         private const val CURSOR_TIMEOUT = 500L
         private const val MULTIPLIER = 1.5f
         private const val NUMBER_OF_FIELDS = 4
