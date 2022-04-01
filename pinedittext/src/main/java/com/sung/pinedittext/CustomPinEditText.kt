@@ -68,7 +68,7 @@ class CustomPinEditText : AppCompatEditText {
         if (isCursorVisibleNow) {
             canvas?.drawLine(startX, startY, startX, stopY, paint)
         }
-        postInvalidateDelayed(cursorTimeout)
+        postInvalidateDelayed(CURSOR_TIMEOUT)
     }
 
     private fun getCharacterAt(position: Int) =
@@ -91,7 +91,7 @@ class CustomPinEditText : AppCompatEditText {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         return when (widthMode) {
             MeasureSpec.EXACTLY -> widthSize
-            MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
+            MeasureSpec.AT_MOST -> min(desiredWidth, widthSize)
             MeasureSpec.UNSPECIFIED -> desiredWidth
             else -> desiredWidth
         }
@@ -117,6 +117,7 @@ class CustomPinEditText : AppCompatEditText {
         textPaint.textSize = textSize
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.style = Paint.Style.FILL
+        textPaint.typeface = typeface
     }
 
     private fun initialize(attr: AttributeSet) {
@@ -125,7 +126,6 @@ class CustomPinEditText : AppCompatEditText {
             cursorPaintColor =
                 attributes.getColor(R.styleable.PinField_highlightColor, cursorPaintColor)
             fieldColor = attributes.getColor(R.styleable.PinField_fieldColor, fieldColor)
-            textPaint.typeface = typeface
         } finally {
             attributes.recycle()
         }
@@ -169,15 +169,15 @@ class CustomPinEditText : AppCompatEditText {
     }
 
     private fun setUpCursorBlinkingInterval() {
-        if (System.currentTimeMillis() - lastCursorChangeState > 500) {
+        if (System.currentTimeMillis() - lastCursorChangeState > CURSOR_TIMEOUT) {
             isCursorVisibleNow = !isCursorVisibleNow
             lastCursorChangeState = System.currentTimeMillis()
         }
     }
 
     companion object {
-        private const val NUMBER_OF_FIELDS = 4
-        private const val cursorTimeout = 500L
+        private const val CURSOR_TIMEOUT = 500L
         private const val MULTIPLIER = 1.5f
+        private const val NUMBER_OF_FIELDS = 4
     }
 }
