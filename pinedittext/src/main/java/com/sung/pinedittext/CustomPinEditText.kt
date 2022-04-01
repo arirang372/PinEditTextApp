@@ -10,45 +10,46 @@ import androidx.core.content.ContextCompat
 import kotlin.math.min
 
 class CustomPinEditText : AppCompatEditText {
-    private val cursorPadding = Util.dpToPx(10f)
-    private val defaultWidth = Util.dpToPx(55f).toInt()
-    private var cursorPaint = Paint()
-    private var fieldPaint = Paint()
-    private var textPaint = Paint()
-    private var singleFieldWidth = 0
     private var cursorLineThickness = Util.dpToPx(1.0f)
-
+    private val cursorPadding = Util.dpToPx(10f)
+    private var cursorPaint = Paint()
     private var cursorPaintColor = ContextCompat.getColor(context, R.color.cursorColor)
         set(value) {
             field = value
             cursorPaint.color = field
             invalidate()
         }
-
     private var cursorThickness = cursorLineThickness
         get() {
             return cursorLineThickness + cursorLineThickness * 0.7f
         }
-
+    private val defaultWidth = Util.dpToPx(55f).toInt()
     private var fieldColor = ContextCompat.getColor(context, R.color.inactivePinFieldColor)
         set(value) {
             field = value
             fieldPaint.color = field
             invalidate()
         }
-
+    private var fieldPaint = Paint().apply {
+        color = fieldColor
+        isAntiAlias = true
+        style = Paint.Style.STROKE
+        strokeWidth = cursorLineThickness
+    }
+    private var isCursorVisibleNow = true
     private var lastCursorChangeState: Long = -1
-    private var cursorCurrentVisible = true
+    private var singleFieldWidth = 0
+    private var textPaint = Paint()
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attr: AttributeSet) : super(context, attr) {
-        initParams(attr)
+        initialize(attr)
     }
 
     constructor(context: Context, attr: AttributeSet, defStyle: Int) : super(context,
         attr,
         defStyle) {
-        initParams(attr)
+        initialize(attr)
     }
 
     private fun limitCharsToNoOfFields() {
@@ -58,25 +59,19 @@ class CustomPinEditText : AppCompatEditText {
     }
 
     init {
-        limitCharsToNoOfFields()
-        setWillNotDraw(false)
-        maxLines = 1
+        cursorPaint = Paint(fieldPaint).apply {
+            color = cursorPaintColor
+            strokeWidth = cursorThickness
+        }
         isSingleLine = true
-
-        fieldPaint.color = fieldColor
-        fieldPaint.isAntiAlias = true
-        fieldPaint.style = Paint.Style.STROKE
-        fieldPaint.strokeWidth = cursorLineThickness
-
+        limitCharsToNoOfFields()
+        maxLines = 1
+        setWillNotDraw(false)
         textPaint.color = currentTextColor
         textPaint.isAntiAlias = true
         textPaint.textSize = textSize
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.style = Paint.Style.FILL
-
-        cursorPaint = Paint(fieldPaint)
-        cursorPaint.color = cursorPaintColor
-        cursorPaint.strokeWidth = cursorThickness
     }
 
     override fun onSelectionChanged(start: Int, end: Int) {
@@ -84,14 +79,15 @@ class CustomPinEditText : AppCompatEditText {
         this.text?.length?.let { this.setSelection(it) }
     }
 
-    private fun initParams(attr: AttributeSet) {
-        val a = context.theme.obtainStyledAttributes(attr, R.styleable.PinField, 0, 0)
+    private fun initialize(attr: AttributeSet) {
+        val attributes = context.theme.obtainStyledAttributes(attr, R.styleable.PinField, 0, 0)
         try {
-            fieldColor = a.getColor(R.styleable.PinField_fieldColor, fieldColor)
-            cursorPaintColor = a.getColor(R.styleable.PinField_highlightColor, cursorPaintColor)
+            fieldColor = attributes.getColor(R.styleable.PinField_fieldColor, fieldColor)
+            cursorPaintColor =
+                attributes.getColor(R.styleable.PinField_highlightColor, cursorPaintColor)
             textPaint.typeface = typeface
         } finally {
-            a.recycle()
+            attributes.recycle()
         }
     }
 
@@ -160,10 +156,10 @@ class CustomPinEditText : AppCompatEditText {
 
     private fun drawCursor(canvas: Canvas?, x: Float, y1: Float, y2: Float, paint: Paint) {
         if (System.currentTimeMillis() - lastCursorChangeState > 500) {
-            cursorCurrentVisible = !cursorCurrentVisible
+            isCursorVisibleNow = !isCursorVisibleNow
             lastCursorChangeState = System.currentTimeMillis()
         }
-        if (cursorCurrentVisible) {
+        if (isCursorVisibleNow) {
             canvas?.drawLine(x, y1, x, y2, paint)
         }
         postInvalidateDelayed(cursorTimeout)
