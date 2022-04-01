@@ -9,6 +9,11 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import kotlin.math.min
 
+/**
+ *   A class that contains each confirmation code field
+ *
+ *   @author John Sung
+ */
 class CustomPinEditText : AppCompatEditText {
     private var cursorLineThickness = Util.dpToPx(1.0f)
     private val cursorPadding = Util.dpToPx(10f)
