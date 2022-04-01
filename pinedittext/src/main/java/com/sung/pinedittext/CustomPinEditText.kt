@@ -52,7 +52,47 @@ class CustomPinEditText : AppCompatEditText {
         initialize(attr)
     }
 
-    private fun limitCharsToNoOfFields() {
+    private fun drawCursor(
+        canvas: Canvas?,
+        startX: Float,
+        startY: Float,
+        stopY: Float,
+        paint: Paint,
+    ) {
+        setUpCursorBlinkingInterval()
+        if (isCursorVisibleNow) {
+            canvas?.drawLine(startX, startY, startX, stopY, paint)
+        }
+        postInvalidateDelayed(cursorTimeout)
+    }
+
+    private fun getCharacterAt(position: Int) =
+        transformationMethod.getTransformation(text, this)?.getOrNull(position)
+            ?: text?.getOrNull(position)
+
+    private fun getViewHeight(desiredHeight: Int, heightMeasureSpec: Int): Int {
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
+        return when (heightMode) {
+            MeasureSpec.EXACTLY -> heightSize
+            MeasureSpec.AT_MOST -> min(desiredHeight, heightSize)
+            MeasureSpec.UNSPECIFIED -> desiredHeight
+            else -> desiredHeight
+        }
+    }
+
+    private fun getViewWidth(desiredWidth: Int, widthMeasureSpec: Int): Int {
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+        return when (widthMode) {
+            MeasureSpec.EXACTLY -> widthSize
+            MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
+            MeasureSpec.UNSPECIFIED -> desiredWidth
+            else -> desiredWidth
+        }
+    }
+
+    private fun limitCharacter() {
         val filterArray = arrayOfNulls<InputFilter>(1)
         filterArray[0] = InputFilter.LengthFilter(NUMBER_OF_FIELDS)
         filters = filterArray
@@ -64,7 +104,7 @@ class CustomPinEditText : AppCompatEditText {
             strokeWidth = cursorThickness
         }
         isSingleLine = true
-        limitCharsToNoOfFields()
+        limitCharacter()
         maxLines = 1
         setWillNotDraw(false)
         textPaint.color = currentTextColor
@@ -72,11 +112,6 @@ class CustomPinEditText : AppCompatEditText {
         textPaint.textSize = textSize
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.style = Paint.Style.FILL
-    }
-
-    override fun onSelectionChanged(start: Int, end: Int) {
-        super.onSelectionChanged(start, end)
-        this.text?.length?.let { this.setSelection(it) }
     }
 
     private fun initialize(attr: AttributeSet) {
@@ -91,44 +126,7 @@ class CustomPinEditText : AppCompatEditText {
         }
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = getViewWidth(defaultWidth * NUMBER_OF_FIELDS, widthMeasureSpec)
-        singleFieldWidth = width / NUMBER_OF_FIELDS
-        val height = getViewHeight(singleFieldWidth, heightMeasureSpec) * MULTIPLIER
-        setMeasuredDimension(width, height.toInt())
-    }
-
-    private fun getViewHeight(desiredHeight: Int, heightMeasureSpec: Int): Int {
-        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
-        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
-
-        return when (heightMode) {
-            MeasureSpec.EXACTLY -> heightSize
-            MeasureSpec.AT_MOST -> min(desiredHeight, heightSize)
-            MeasureSpec.UNSPECIFIED -> desiredHeight
-            else -> desiredHeight
-        }
-    }
-
-    private fun getViewWidth(desiredWidth: Int, widthMeasureSpec: Int): Int {
-        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
-        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
-
-        return when (widthMode) {
-            MeasureSpec.EXACTLY -> widthSize
-            MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
-            MeasureSpec.UNSPECIFIED -> desiredWidth
-            else -> desiredWidth
-        }
-    }
-
-    private fun getCharAt(i: Int): Char? {
-        return transformationMethod.getTransformation(text, this)?.getOrNull(i)
-            ?: text?.getOrNull(i)
-    }
-
     override fun onDraw(canvas: Canvas?) {
-
         for (i in 0 until NUMBER_OF_FIELDS) {
             val x1 = (i * singleFieldWidth)
             val padding = Util.dpToPx(6f)
@@ -139,14 +137,13 @@ class CustomPinEditText : AppCompatEditText {
             val bottom = (height / 2) + (squareHeight / 2)
             val textX = ((right - left) / 2) + left
             val textY = ((bottom - top) / 2 + top) + cursorLineThickness + (textPaint.textSize / 4)
-            val character: Char? = getCharAt(i)
             canvas?.drawRect(left, top, right, bottom, fieldPaint)
-            if (character != null) {
-                canvas?.drawText(character.toString(), textX, textY, textPaint)
+            val character: Char? = getCharacterAt(i)
+            character?.let {
+                canvas?.drawText(it.toString(), textX, textY, textPaint)
             }
-
             if (hasFocus() && i == text?.length ?: 0) {
-                val cursorPadding = (cursorPadding + cursorThickness)
+                val cursorPadding = cursorPadding + cursorThickness
                 val cursorY1 = (top + cursorPadding) * 1.3f
                 val cursorY2 = (bottom - cursorPadding) * 0.8f
                 drawCursor(canvas, textX, cursorY1, cursorY2, cursorPaint)
@@ -154,15 +151,23 @@ class CustomPinEditText : AppCompatEditText {
         }
     }
 
-    private fun drawCursor(canvas: Canvas?, x: Float, y1: Float, y2: Float, paint: Paint) {
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val width = getViewWidth(defaultWidth * NUMBER_OF_FIELDS, widthMeasureSpec)
+        singleFieldWidth = width / NUMBER_OF_FIELDS
+        val height = getViewHeight(singleFieldWidth, heightMeasureSpec) * MULTIPLIER
+        setMeasuredDimension(width, height.toInt())
+    }
+
+    override fun onSelectionChanged(start: Int, end: Int) {
+        super.onSelectionChanged(start, end)
+        this.text?.length?.let { this.setSelection(it) }
+    }
+
+    private fun setUpCursorBlinkingInterval() {
         if (System.currentTimeMillis() - lastCursorChangeState > 500) {
             isCursorVisibleNow = !isCursorVisibleNow
             lastCursorChangeState = System.currentTimeMillis()
         }
-        if (isCursorVisibleNow) {
-            canvas?.drawLine(x, y1, x, y2, paint)
-        }
-        postInvalidateDelayed(cursorTimeout)
     }
 
     companion object {
