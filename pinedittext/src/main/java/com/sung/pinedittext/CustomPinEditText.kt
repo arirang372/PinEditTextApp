@@ -36,6 +36,12 @@ class CustomPinEditText : AppCompatEditText {
     }
     private var isCursorVisibleNow = true
     private var lastCursorChangeState: Long = -1
+    private var numberOfFields: Int = 4
+        set(value) {
+            field = value
+            limitCharacter()
+            invalidate()
+        }
     private var singleFieldWidth = 0
     private var textPaint = Paint()
 
@@ -91,9 +97,7 @@ class CustomPinEditText : AppCompatEditText {
     }
 
     private fun limitCharacter() {
-        val filterArray = arrayOfNulls<InputFilter>(1)
-        filterArray[0] = InputFilter.LengthFilter(NUMBER_OF_FIELDS)
-        filters = filterArray
+        filters = arrayOf(InputFilter.LengthFilter(numberOfFields))
     }
 
     init {
@@ -119,17 +123,18 @@ class CustomPinEditText : AppCompatEditText {
             cursorPaintColor =
                 attributes.getColor(R.styleable.PinField_highlightColor, cursorPaintColor)
             fieldColor = attributes.getColor(R.styleable.PinField_fieldColor, fieldColor)
+            numberOfFields = attributes.getInt(R.styleable.PinField_noOfFields, numberOfFields)
         } finally {
             attributes.recycle()
         }
     }
 
     override fun onDraw(canvas: Canvas?) {
-        for (i in 0 until NUMBER_OF_FIELDS) {
+        for (i in 0 until numberOfFields) {
             val x1 = (i * singleFieldWidth)
             val padding = Util.dpToPx(6f)
             val left = x1 + padding
-            var right = (x1 + singleFieldWidth) - padding
+            val right = (x1 + singleFieldWidth) - padding
             val squareHeight = ((right) - left) * MULTIPLIER
             val top = (height / 2) - (squareHeight / 2)
             val bottom = (height / 2) + (squareHeight / 2)
@@ -151,8 +156,8 @@ class CustomPinEditText : AppCompatEditText {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = getViewWidth(DEFAULT_WIDTH * NUMBER_OF_FIELDS, widthMeasureSpec)
-        singleFieldWidth = width / NUMBER_OF_FIELDS
+        val width = getViewWidth(DEFAULT_WIDTH * numberOfFields, widthMeasureSpec)
+        singleFieldWidth = width / numberOfFields
         val height = getViewHeight(singleFieldWidth, heightMeasureSpec) * MULTIPLIER
         setMeasuredDimension(width, height.toInt())
     }
@@ -176,6 +181,6 @@ class CustomPinEditText : AppCompatEditText {
         private val DEFAULT_WIDTH = Util.dpToPx(55f).toInt()
         private const val CURSOR_TIMEOUT = 500L
         private const val MULTIPLIER = 1.5f
-        private const val NUMBER_OF_FIELDS = 4
+        // private const val NUMBER_OF_FIELDS = 4
     }
 }
