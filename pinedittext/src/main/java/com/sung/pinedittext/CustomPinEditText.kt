@@ -174,13 +174,12 @@ class CustomPinEditText : AppCompatEditText {
         }
     }
 
-    companion object {
+    private companion object {
         private var CURSOR_LINE_THICKNESS = Util.dpToPx(1.0f)
         private val CURSOR_PADDING = Util.dpToPx(10f)
         private var CURSOR_THICKNESS = CURSOR_LINE_THICKNESS + CURSOR_LINE_THICKNESS * 0.7f
         private val DEFAULT_WIDTH = Util.dpToPx(55f).toInt()
         private const val CURSOR_TIMEOUT = 500L
         private const val MULTIPLIER = 1.5f
-        // private const val NUMBER_OF_FIELDS = 4
     }
 }

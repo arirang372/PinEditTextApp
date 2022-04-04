@@ -80,7 +80,7 @@
         android:inputType="number"
         android:textSize="16sp"
         app:fieldColor="@color/colorPrimary"
-        app:noOfFields="6"/>
+        app:noOfFields="4"/>
 
 
     <com.sung.pinedittext.CustomRectangle
